@@ -1,50 +1,39 @@
 package com.bskyb.quarks;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
 
 public class PasswordValidator {
-    public boolean isValid(String password) {
-        var rulesFollowed = 0;
-        HashMap<String, Boolean> rules = new HashMap<>();
-
-        //Assignation of rules
-        rules.put("8 characters", false);
-        rules.put("a capital letter", false);
-        rules.put("a lowercase", false);
-        rules.put("a number", false);
-        rules.put("an underscore", false);
+    private final List<String> requirements = Arrays.asList("8 characters",
+                                                    "a number",
+                                                    "a lowercase",
+                                                    "a capital letter",
+                                                    "an underscore");
+    public Rules isValid(String password) {
+        var rules = new Rules();
 
         //Check of the 8 characters
-        if (password.length() >= 8) {
-            rules.put("8 characters", true);
-        }
-
-        //Check of a number, lowercase and capital letter
-        for (char c : password.toCharArray()) {
-            if (Character.isDigit(c)) {
-                rules.put("a number", true);
-            }
-            if (Character.isLowerCase(c)) {
-                rules.put("a lowercase", true);
-            }
-            if (Character.isUpperCase(c)) {
-                rules.put("a capital letter", true);
-            }
-        }
+        if (password.length() < 8) rules.nulesNotAccomplished.add(requirements.get(0));
 
         //Check for the underscore
-        if (password.contains("_")) {
-            rules.put("an underscore", true);
-        }
+        if (!password.contains("_")) rules.nulesNotAccomplished.add(requirements.get(4));
 
-        for (Map.Entry<String, Boolean> rule : rules.entrySet()) {
-            if (rule.getValue() == false) {
-                System.out.println("Your password needs " + rule.getKey() + ".");
-            }else{
-                ++rulesFollowed;
-            }
+        //Check of a number, lowercase and capital letter
+        boolean countNumbers = false;
+        boolean countLowercases = false;
+        boolean countUppercases = false;
+
+        for (char c : password.toCharArray()) {
+            if (Character.isDigit(c)) countNumbers = true;
+            if (Character.isLowerCase(c)) countLowercases = true;
+            if (Character.isUpperCase(c)) countUppercases = true;
         }
-        return rulesFollowed == rules.size();
+        if(!countNumbers) rules.nulesNotAccomplished.add(requirements.get(1));
+        if(!countLowercases) rules.nulesNotAccomplished.add(requirements.get(2));
+        if(!countUppercases) rules.nulesNotAccomplished.add(requirements.get(3));
+
+        if(!rules.nulesNotAccomplished.isEmpty()) rules.fulfilled = false;
+
+        return rules;
     }
 }

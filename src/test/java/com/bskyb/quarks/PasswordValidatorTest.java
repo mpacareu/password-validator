@@ -7,24 +7,37 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class PasswordValidatorTest {
-
+    PasswordValidator validator = new PasswordValidator();
     @Test
     public void correctPassword() {
-        PasswordValidator validator = new PasswordValidator();
-        assertTrue(validator.isValid("Hola_567"));
-        assertTrue(validator.isValid("Nube_4AltaX"));
-        assertTrue(validator.isValid("Clave_9Segura"));
-        assertTrue(validator.isValid("Sol_2026Az"));
+        assertTrue(validator.isValid("Hola_567").fulfilled);
+        assertTrue(validator.isValid("Nube_4AltaX").fulfilled);
+        assertTrue(validator.isValid("Clave_9Segura").fulfilled);
+        assertTrue(validator.isValid("Sol_2026Az").fulfilled);
+    }
+
+    @Test
+    public void noPassword() {
+        assertFalse(validator.isValid(" ").fulfilled);
     }
     @Test
-    public void wrongPassword() {
-        PasswordValidator validator = new PasswordValidator();
-        assertFalse(validator.isValid("pepe_1A"));
-        assertFalse(validator.isValid("sinnumero_Aa"));
-        assertFalse(validator.isValid("SIN_123456"));
-        assertFalse(validator.isValid("clave123Aa"));
-        assertFalse(validator.isValid(" "));
-
+    public void notEnoughCharacters(){
+        assertFalse(validator.isValid("pepe_1A").fulfilled);
     }
-
+    @Test
+    public void noNumber(){
+        assertFalse(validator.isValid("sinnumero_Aa").fulfilled);
+    }
+    @Test
+    public void noLowerCase(){
+        assertFalse(validator.isValid("SIN_123456").fulfilled);
+    }
+    @Test
+    public void noCapitalLetter(){
+        assertFalse(validator.isValid("claves_123ba").fulfilled);
+    }
+    @Test
+    public void noUnderscore(){
+        assertFalse(validator.isValid("clave123Aa").fulfilled);
+    }
 }
